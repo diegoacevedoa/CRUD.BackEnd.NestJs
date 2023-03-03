@@ -15,8 +15,9 @@ export const databaseProviders = [
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        requestTimeout: +configService.get('TIMEOUT'),
-        pool: { acquireTimeoutMillis: +configService.get('TIMEOUT') },
+        requestTimeout: +configService.get('DB_TIMEOUT'),
+        pool: { acquireTimeoutMillis: +configService.get('DB_TIMEOUT') },
+        //entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
         entities: [PersonaEntity],
         synchronize: false,
         options: {
