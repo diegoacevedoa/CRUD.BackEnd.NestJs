@@ -6,8 +6,8 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { DocumentBuilder } from '@nestjs/swagger/dist';
 
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule, { cors: true });
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  // const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
