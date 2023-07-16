@@ -6,13 +6,17 @@ PASOS PARA DESARROLLARLO
 	PASOS DESARROLLO NESTJS
 
 Ayudas: nest --help
+
 1- Instalar nest si no lo tiene instalado en la máquina: npm i -g @nestjs/cli
+
 2- Crear el proyecto, esto lo crea con una plantilla base de modulo, controlador, servicio y ubicarse en la carpeta del proyecto: nest new project-name
+
 3- Agregar código en el main.ts para habilitar cors (opcional):  
 
 const app = await NestFactory.create(AppModule, { cors: true });
 
 4- Instalar class-validator y class-transformer para las validaciones middleware: npm i class-validator class-transformer
+
 5- Agregar código para las validaciones de los middlewares de los dtos en el main.ts: 
 
 import { ValidationPipe } from '@nestjs/common';
@@ -21,6 +25,7 @@ app.useGlobalPipes(new ValidationPipe());
 useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
 6- Instalar Swagger para ver las APIs en el navegador web así (http://localhost:3000/api/docs): npm i @nestjs/swagger
+
 7- Agregar código en el main.ts para el swagger: 
 
 const config = new DocumentBuilder()
@@ -33,10 +38,15 @@ const config = new DocumentBuilder()
   SwaggerModule.setup('api/docs', app, document);
 
 8- Fijar el prefijo global en el main.ts: app.setGlobalPrefix("/api");
+
 9- Instalar dotenv para las variables de entorno y agregar el archivo .env afuera de src, esto es opcional, ya que el paquete @nestjs/config tiene dotenv internamente: npm i dotenv
+
 10- Instalar ConfigService para capturar de variable de entorno: npm i @nestjs/config 
+
 11- Instalar TypeORM para la base de datos: npm install --save @nestjs/typeorm
+
 12- Instalar TypeORM para la base de datos: npm install typeorm mssql 
+
 13- Agregar las sgtes variables de entorno en el archivo .env que debe quedar ubicado en la raíz del proyecto:
 
 DB_NAME=Prueba
@@ -96,9 +106,13 @@ import { databaseProviders } from "./database.service";
 export class DatabaseModule {}
 
 15- Agregar en los imports del app.module.ts: ConfigModule.forRoot({ isGlobal: true }), DatabaseModule
+
 16- Crear módulo: nest g mo module-name
+
 17- Crear controlador: nest g co controller-name
+
 18- Crear servicio: nest g s service-name
+
 19- Crear entidades adentro de la carpeta entity de cada módulo, ejemplo:
 
 persona.entity.ts  ********************************************************************************************************
@@ -210,6 +224,7 @@ export class PersonaUpdateDto extends PartialType(PersonaCreateDto) {
 
 
 21- Crear validaciones middleware si aplica
+
 22- Crear funcionalidades de las APIs en el service, el controlador y el modulo, ejemplo:
 
 persona.service.ts  ************************************************************************************************
