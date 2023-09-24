@@ -372,3 +372,92 @@ import { PersonaService } from './persona.service';
   providers: [PersonaService],
 })
 export class PersonaModule {}
+
+
+
+
+DOCKERIZAR UNA APP CON DOCKER DESKTOP
+
+1- Crear archivo Dockerfile:
+
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
+
+FROM node:18-alpine AS development
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+RUN npm ci
+
+COPY --chown=node:node . .
+
+USER node
+
+###################
+# BUILD FOR PRODUCTION
+###################
+
+FROM node:18-alpine AS build
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+RUN npm run build
+
+ENV NODE_ENV production
+
+RUN npm ci --only=production && npm cache clean --force
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:18-alpine AS production
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+CMD [ "node", "dist/main.js" ]
+
+
+2- Para evitar tirar comandos para crear imagenes, se debe crear archivo docker-compose.yml:
+
+version: '3.9' # optional since v1.27.0
+services:
+  api-crud-nest:
+    image: api-crud-nest-image
+    container_name: api-crud-nest-container
+    build: .
+    ports:
+      - '5000:3000'
+    environment:
+      NODE_ENV: production
+      DB_NAME: Prueba
+      DB_PORT: 1433
+      DB_USERNAME: diego.acevedo
+      DB_PASSWORD: Medellin1*
+      # DB_HOST: localhost
+      DB_HOST: host.docker.internal
+      DB_DATABASE: Prueba
+      DB_TIMEOUT: 30000
+
+
+3- Comando para crear los contenedores del archivo docker-compose.yml: docker compose up
+
+4- Comando para eliminar todo lo que creó el compose, menos las imágenes: docker compose down
+
+
+
+Sí quiere comandos: Construír Imagen Docker, ejecutar en terminal: docker build -t name-image-docker .
+
+Sí quiere comandos: Ejecutar el contenedor: Ir al Docker Desktop y correr la imagen manualmente o por comandos: docker run -p8089:3000 name-image-docker
